@@ -8,39 +8,77 @@
 #include <stdlib.h>
 #include "linkedList.h"
 
+#ifdef _WIN32
+#define CLEARSCREEN "clr"
+#endif
+#ifdef __linux__
+#define CLEARSCREEN "clear"
+#endif
+
+char char_menu[12][50] = {
+    "Here are all function you can use to LinkList:",
+    "A.InitList",
+    "B.DestroyList",
+    "C.InsertList",
+    "D.DeleteList",
+    "E.TraverseList",
+    "F.SearchList",
+    "G.ReverseList",
+    "H.IsLoopList",
+    "I.ReverseEvenList",
+    "J.FindMidNode",
+    "Please choose the function:(A-J)"
+};
+
 void printValue(ElemType e);
 void FuncMenu();
 
 int main() {
-    LinkedList *p;
-    p = (LinkedList*)malloc(sizeof(LinkedList));
-    InitList(p);
-
-    for (int i = 0; i < 4; i++) {
-        LNode *n = (LNode*)malloc(sizeof(LNode));
-        n->data = i%3;
-        n->next = NULL;
-
-        InsertList(*p, n);
-    }
-    
-
-    void (*test)(ElemType);
-    test = printValue;
-    TraverseList(*p, test);
-    printf("\n");
-    LNode *n = FindMidNode(p);
-    TraverseList(n, test);
-    printf("\n");
-
-    DestroyList(p);
+    FuncMenu();
 
     return 0;
 }
 
 // 功能面板，操作所有功能
 void FuncMenu() {
+    LinkedList *p = (LinkedList*)malloc(sizeof(LinkedList));
+    
+    ElemType *cache = (ElemType*)malloc(sizeof(ElemType));
+    void (*visit)(ElemType) = printValue;
 
+    char ch;
+
+    while(1) {
+        for (int i = 0; i < 12; i++) {
+            puts(char_menu[i]);
+        }
+        do {
+            ch = getchar();
+        } while (ch == '\n');
+
+        switch(ch) {
+            case 'A': InitList(p); break;
+            case 'B': DestroyList(p); break;
+            case 'C': 
+                LNode* n = (LNode*)malloc(sizeof(LNode));
+                n->data = 1;
+                n->next = NULL;
+                InsertList(*p, n); break;
+            case 'D': DeleteList(*p, cache); break;
+            case 'E': TraverseList(*p, visit); break;
+            case 'F': SearchList(*p, SUCCESS); break;
+            case 'G': ReverseList(p); break;
+            case 'H': IsLoopList(*p); break;
+            case 'I': ReverseEvenList(p); break;
+            case 'J': FindMidNode(p); break;
+
+            default: printf("%c:no opinion!\n", ch); break;
+        }
+
+        getchar();
+        getchar();
+        system(CLEARSCREEN);
+    }
 }
 
 /* 打印节点值 */
