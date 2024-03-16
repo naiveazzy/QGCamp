@@ -9,8 +9,8 @@
 				"-fdiagnostics-color=always",
 				"-g",
 				"${file}",
-				"-I", "${fileDirname}/Headers",
-				"-I", "${fileDirname}/Sources",
+				"-I", "${fileDirname}/../Headers",
+				"-I", "${fileDirname}/../Sources",
 				"-o",
 				"${fileDirname}/${fileBasenameNoExtension}"
 			],
