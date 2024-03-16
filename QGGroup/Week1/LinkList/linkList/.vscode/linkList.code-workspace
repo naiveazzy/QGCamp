@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"code-runner.executorMap": {
+			
+			"c": "cd $dir && gcc $fileName -I ../Headers -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+			"cpp": "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
+		},
+		"code-runner.runInTerminal": true,
+		"code-runner.saveFileBeforeRun": true
+	}
+}
