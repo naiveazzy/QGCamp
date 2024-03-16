@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "linkedList.h"
 
+// 为WINDOWS或LINUX系统不同定义
 #ifdef _WIN32
 #define CLEARSCREEN "clr"
 #endif
@@ -15,6 +16,7 @@
 #define CLEARSCREEN "clear"
 #endif
 
+// 界面字符数组
 char char_menu[12][50] = {
     "Here are all function you can use to LinkList:",
     "A.InitList",
@@ -41,17 +43,21 @@ int main() {
 
 // 功能面板，操作所有功能
 void FuncMenu() {
+    // 声明指针
     LinkedList *p = (LinkedList*)malloc(sizeof(LinkedList));
-    
     ElemType *cache = (ElemType*)malloc(sizeof(ElemType));
     void (*visit)(ElemType) = printValue;
 
     char ch;
 
     while(1) {
+
+        // 打印界面
         for (int i = 0; i < 12; i++) {
             puts(char_menu[i]);
         }
+
+        // 排除回车
         do {
             ch = getchar();
         } while (ch == '\n');
@@ -75,6 +81,7 @@ void FuncMenu() {
             default: printf("%c:no opinion!\n", ch); break;
         }
 
+        // 不接收回车，同时保留输出结果
         getchar();
         getchar();
         system(CLEARSCREEN);
