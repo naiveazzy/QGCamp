@@ -5,7 +5,7 @@
 
 // 为WINDOWS或LINUX系统不同定义
 #ifdef _WIN32
-#define CLEARSCREEN "clr"
+#define CLEARSCREEN "cls"
 #endif
 #ifdef __linux__
 #define CLEARSCREEN "clear"
@@ -19,7 +19,7 @@ char char_menu[8][50] = {
     "C.InsertBeforeList_DuL",
     "D.InsertAfterList_DuL",
     "E.DeleteList_DuL",
-    "F.TraverseList_DuL",
+    "F.TraverseList_DuL(CheckList)",
     "Please choose the function:(A-J)"
 };
 
@@ -47,22 +47,39 @@ int main() {
         } while (ch == '\n');
 
         switch(ch) {
-            case 'A': InitList_DuL(p); break;
-            case 'B': DestroyList_DuL(p); break;
+            case 'A': 
+                if (!InitList_DuL(p)) {
+                    printf("The creation has failed!\n");
+                } else {
+                    printf("The creation is successed.\n");
+                }
+                break;
+            case 'B': 
+                DestroyList_DuL(p); 
+                printf("The Destroy is completed.\n");
+                break;
             case 'C': 
                 n = (DuLNode*)malloc(sizeof(DuLNode));
-                n->data = 1;
+                printf("Please enter the data of the new node:");
+                scanf("%d", &n->data);
                 n->next = NULL;
                 n->prior = NULL;
                 InsertBeforeList_DuL(*p, n); break;
             case 'D': 
                 n = (DuLNode*)malloc(sizeof(DuLNode));
-                n->data = 1;
+                printf("Please enter the data of the new node:");
+                scanf("%d", &n->data);
                 n->next = NULL;
                 n->prior = NULL;
                 InsertAfterList_DuL(*p, n); break;
-            case 'E': DeleteList_DuL(*p, cache); break;
-            case 'F': TraverseList_DuL(*p, printValue); break;
+            case 'E': 
+                DeleteList_DuL(*p, cache);
+                printf("Deleted the node after head node, its data is %d", *cache);
+                break;
+            case 'F': 
+                printf("The LinkList:");
+                TraverseList_DuL(*p, printValue);
+                break;
 
             default: printf("%c:no opinion!\n", ch); break;
         }
@@ -177,6 +194,8 @@ Status DeleteList_DuL(DuLNode *p, ElemType *e) {
     p->next = q;
     if (q != NULL) q->prior = p;
 
+    *e = n->data;
+
     free(n);
 }
 
@@ -184,15 +203,17 @@ Status DeleteList_DuL(DuLNode *p, ElemType *e) {
 void TraverseList_DuL(DuLinkedList L, void (*visit)(ElemType e)) {
     DuLNode *p = L->next;
 
-    // 向前遍历
+    printf("\nR:");
+    // 向下遍历
     while (p != NULL) {
         visit(p->data);
         p = p->next;
     }
 
+    printf("\nL:");
     p = L->prior;
 
-    // 向后遍历
+    // 向上遍历
     while (p != NULL) {
         visit(p->data);
         p = p->prior;

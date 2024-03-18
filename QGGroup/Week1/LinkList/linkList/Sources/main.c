@@ -90,7 +90,7 @@ void FuncMenu()
             break;
         case 'D':
             DeleteList(*p, cache);
-            printf("Deleted the node after head node, its data is %d", cache);
+            printf("Deleted the node after head node, its data is %d", *cache);
             break;
         case 'E':
             printf("The LinkList:");
@@ -123,7 +123,7 @@ void FuncMenu()
         // 不接收回车，同时保留输出结果
         getchar();
         getchar();
-        //system(CLEARSCREEN);
+        system(CLEARSCREEN);
     }
 }
 
@@ -293,27 +293,30 @@ Status IsLoopList(LinkedList L)
 LNode *ReverseEvenList(LinkedList *L)
 {
 
-    // PL1 PL2 PR1 PR2 分别为原链表的顺序四个节点
-    // Lnew为反转后链表头
+    // PL PM PR 分别为原链表的顺序三个节点
     LNode *PL = *L, *PM, *PR;
 
-    // 如果链表只有头一个节点，返回该节点
+    // 如果链表只有头节点和下一个节点，返回该节点
     if (PL->next == NULL || PL->next->next == NULL)
         return PL;
 
-    // 初始化PL2指针和新链表头
+    // 初始化PM，PR指针
     PM = PL->next;
     PR = PM->next;
 
     do
     {
+        // 扭转顺序，使PL PM PR 变为 PL PR PM
         PL->next = PR;
         PM->next = PR->next;
         PR->next = PM;
 
-        // 前移PL1和PL2
+        // 将PL PM PR 往后移
+        // 注意现在是将PL PR PM迁移变为PL(原PM) PM PR
         PL = PM;
         PM = PM->next;
+
+        // 如果PM为表尾，退出
         if (PM == NULL) break;
         PR = PM->next;
         
