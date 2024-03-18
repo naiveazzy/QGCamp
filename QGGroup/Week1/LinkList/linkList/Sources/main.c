@@ -10,7 +10,7 @@
 
 // 为WINDOWS或LINUX系统不同定义
 #ifdef _WIN32
-#define CLEARSCREEN "clr"
+#define CLEARSCREEN "cls"
 #endif
 #ifdef __linux__
 #define CLEARSCREEN "clear"
@@ -23,7 +23,7 @@ char char_menu[12][50] = {
     "B.DestroyList",
     "C.InsertList",
     "D.DeleteList",
-    "E.TraverseList",
+    "E.TraverseList(CheckList)",
     "F.SearchList",
     "G.ReverseList",
     "H.IsLoopList",
@@ -70,37 +70,49 @@ void FuncMenu()
         switch (ch)
         {
         case 'A':
-            InitList(p);
+            if (!InitList(p)) {
+                printf("The creation has failed!\n");
+            } else {
+                printf("The creation is successed.\n");
+            }
             break;
         case 'B':
             DestroyList(p);
+            printf("The Destroy is completed.\n");
             break;
         case 'C':
             n = (LNode *)malloc(sizeof(LNode));
-            n->data = 1;
+            printf("Please enter the data of the new node:");
+            scanf("%d", &n->data);
             n->next = NULL;
             InsertList(*p, n);
+            printf("The new node has inserted.\n");
             break;
         case 'D':
             DeleteList(*p, cache);
+            printf("Deleted the node after head node, its data is %d", cache);
             break;
         case 'E':
+            printf("The LinkList:");
             TraverseList(*p, visit);
             break;
         case 'F':
-            SearchList(*p, SUCCESS);
+            printf("Does the linklist include data: %d? The ans is: %d", SUCCESS, SearchList(*p, SUCCESS));
             break;
         case 'G':
             ReverseList(p);
+            printf("The linklist has been reversed.\n");
             break;
         case 'H':
-            IsLoopList(*p);
+            printf("Is the list loop?: %d", IsLoopList(*p));
             break;
         case 'I':
-            ReverseEvenList(p);
+            (*p)->next = ReverseEvenList(p);
+            printf("The linklist has been reversed even.\n");
             break;
         case 'J':
-            FindMidNode(p);
+            n = FindMidNode(p);
+            printf("The data of mid node is: %d", n->data);
             break;
 
         default:
@@ -111,7 +123,7 @@ void FuncMenu()
         // 不接收回车，同时保留输出结果
         getchar();
         getchar();
-        system(CLEARSCREEN);
+        //system(CLEARSCREEN);
     }
 }
 
@@ -283,42 +295,31 @@ LNode *ReverseEvenList(LinkedList *L)
 
     // PL1 PL2 PR1 PR2 分别为原链表的顺序四个节点
     // Lnew为反转后链表头
-    LNode *PL1 = *L, *PL2, *PR1, *PR2, *Lnew;
+    LNode *PL = *L, *PM, *PR;
 
     // 如果链表只有头一个节点，返回该节点
-    if (PL1->next == NULL)
-        return PL1;
+    if (PL->next == NULL || PL->next->next == NULL)
+        return PL;
 
     // 初始化PL2指针和新链表头
-    Lnew = PL2 = PL1->next;
+    PM = PL->next;
+    PR = PM->next;
 
     do
     {
-
-        // 如果PR1不为空
-        if (PL2->next != NULL)
-        {
-            // 初始化PR1和PR2
-            PR1 = PL2->next;
-            PR2 = (PR1->next != NULL ? PR1->next : NULL);
-        }
-        else
-        {
-            // 如果PR1为空则均初始化为空
-            PR1 = NULL;
-            PR2 = NULL;
-        }
-
-        // 将PL2连接到PL1，将PL1连接到PR2或PR1（当PR2为空时）
-        PL2->next = PL1;
-        PL1->next = (PR2 != NULL ? PR2 : PR1);
+        PL->next = PR;
+        PM->next = PR->next;
+        PR->next = PM;
 
         // 前移PL1和PL2
-        PL1 = PR1;
-        PL2 = PR2;
-    } while (PL1 != NULL && PL2 != NULL);
+        PL = PM;
+        PM = PM->next;
+        if (PM == NULL) break;
+        PR = PM->next;
+        
+    } while (PR != NULL);
 
-    return Lnew;
+    return (*L)->next;
 }
 
 /* 寻找中节点 */
